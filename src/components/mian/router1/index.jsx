@@ -1,31 +1,38 @@
 import React, { Fragment } from 'react';  //Fragment 虚拟节点
-import axios from "axios"
+import { connect } from "react-redux";
+import {loadListDataAsync} from "@/components/mian/router1/actionCreator";
 import { Button } from 'antd-mobile';
-export default class extends React.Component {
+
+class Router1 extends React.Component {
     render() {
         return (
             <Fragment>
                 <div>router1组件</div>
-                <Button onClick={this.testGet.bind(this)}>发送ajax按钮</Button>
+                <Button onClick={this.props.handleAdd.bind(this)}>发送ajax按钮</Button>
             </Fragment>
         )
     }
+    // componentDidMount(){
+    //     this.props.handleAdd();
+    // }
+}
 
-    testGet(){
-        // https://cnodejs.org/api/v1/topics 代理该接口示范
-        // axios({
-        //     method:"get",
-        //     url:"/apis/api/v1/topics"
-        // }).then((res)=>{
-        //     console.log(res);
-        // })
 
-        // mock数据发送
-        axios({
-            method: "get",
-            url: "/test"
-        }).then((res) => {
-            console.log(res);
-        })
+//定义属性
+const mapStateToProps = (state) =>{
+    console.log(state);
+    return {
+        titleList: state.getIn(["indexReducer", "titleList"])
     }
 }
+//定义方法
+const mapDispatchToProps = (dispatch) => ({
+    handleAdd() {
+        dispatch(loadListDataAsync(dispatch));
+    },
+    // handleSync() {
+    //     //异步调用dispatch
+    // }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Router1);
